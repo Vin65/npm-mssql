@@ -11,11 +11,12 @@ const MSSQL_PASSWORD  = process.env.MSSQL_PASSWORD;
 let singleton;
 
 class MssqlConfig {
-  constructor(mssqlClient) {
+  constructor(environment, mssqlClient) {
+    this.environment = environment;
     this.datasources = {};
-    this.addDatasource(this.constructor.masterDatasource(), MSSQL_SERVER, MSSQL_USERNAME, MSSQL_PASSWORD);
     
-    this.mssqlClient  = mssqlClient || new MssqlClient(this.datasources[this.constructor.masterDatasource()]);
+    let masterDatasourceConfig = this.addDatasource(this.constructor.masterDatasource(), MSSQL_SERVER, MSSQL_USERNAME, MSSQL_PASSWORD);
+    this.mssqlClient  = mssqlClient || new MssqlClient(masterDatasourceConfig);
   }
   
   static masterDatasource() {
@@ -37,7 +38,10 @@ class MssqlConfig {
   }
   
   addDatasource(datasource, server, username, password) {
-    this.datasources[datasource.toLowerCase()] = this.constructor.config(datasource, server, username, password);
+    let config = this.constructor.config(datasource, server, username, password);
+    this.datasources[datasource.toLowerCase()] = config;
+    
+    return config;
   }
   
   addDatasources(datasources) {
@@ -59,11 +63,15 @@ class MssqlConfig {
   async for(datasource) {
     let config = this.datasources[datasource.toLowerCase()];
     if (!config) {
-      this.addDatasources(await this.fetchDatasources());
+      if (this.environment === 'production') {
+        this.addDatasources(await this.fetchDatasources());
+        config = this.datasources[datasource.toLowerCase()];
+      } else {
+        config = this.datasources[this.constructor.masterDatasource()];
+        config.datasource = datasource.toLowerCase();
+      }
     }
     
-    config = this.datasources[datasource.toLowerCase()];
-    if (!config) throw new Error(`Server configuration for ${datasource} not found!`);
     return config;
   }
 }

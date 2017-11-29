@@ -10,6 +10,7 @@ const expect = chai.expect;
 const sinon = require('sinon');
 
 chai.use(require("chai-as-promised"));
+chai.use(require("sinon-chai"));
 
 describe('MssqlConfig', () => { 
   describe('.masterDatasource', () => {
@@ -62,30 +63,44 @@ describe('MssqlConfig', () => {
   
   
   describe('#for', () => {
-    let singleton = MssqlConfig.singleton();
-    
-    beforeEach(function() {
-      this.execute = sinon.stub(MssqlClient.prototype, 'execute');
-      this.execute.resolves(MssqlMockedResponse.datasource('pinewines', '10.81.0.1'));
-    });
-
-    afterEach(function() {
-      this.execute.restore();
-    });
-    
-    it('should return config for masterDatasource', async () => {
-      let promise = Promise.resolve(singleton.for(MssqlConfig.masterDatasource()));
-      expect(promise).to.eventually.have.property('datasource', MssqlConfig.masterDatasource());
+    context('when no environment is specified', () => {
+      let singleton = MssqlConfig.singleton();
+      
+      it('should return config for masterDatasource', async () => {
+        let promise = Promise.resolve(singleton.for(MssqlConfig.masterDatasource()));
+        expect(promise).to.eventually.have.property('datasource', MssqlConfig.masterDatasource());
+      });
+      
+      it('should return config for pinewines', async () => {
+        let promise = Promise.resolve(singleton.for('pinewines'));
+        expect(promise).to.eventually.have.property('datasource', 'pinewines');
+      });
     });
     
-    it('should return config for pinewines', async () => {
-      let promise = Promise.resolve(singleton.for('pinewines'));
-      expect(promise).to.eventually.have.property('datasource', 'pinewines');
-    });
-    
-    it('should throw error for invalid datasource', async () => {
-      let promise = Promise.resolve(singleton.for('invalid'));
-      expect(promise).to.be.rejectedWith(Error, 'Server configuration for invalid not found!');
+    context("when environment is specified as 'production'", () => {
+      let config = new MssqlConfig('production');
+      let stub;
+      
+      beforeEach(function() {
+        stub = sinon.stub(MssqlClient.prototype, 'execute');
+        stub.resolves(MssqlMockedResponse.datasource('pinewines', '10.81.0.1'));
+      });
+  
+      afterEach(function() {
+        stub.restore();
+      });
+      
+      it('should return config for masterDatasource', async () => {
+        let promise = Promise.resolve(config.for(MssqlConfig.masterDatasource()));
+        expect(promise).to.eventually.have.property('datasource', MssqlConfig.masterDatasource());
+        expect(stub).to.not.have.been.called;
+      });
+      
+      it('should return config for pinewines', async () => {
+        let promise = Promise.resolve(config.for('pinewines'));
+        expect(promise).to.eventually.have.property('datasource', 'pinewines');
+        expect(stub).to.have.been.called;
+      });
     });
   });
 });
