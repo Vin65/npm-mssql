@@ -3,7 +3,6 @@
 const MssqlClient = require('./MssqlClient');
 const MssqlQuery = require('./../lib/MssqlQuery');
 
-const ENVIRONMENT     = process.env.ENVIRONMENT;
 const MSSQL_SERVER    = process.env.MSSQL_SERVER;
 const MSSQL_USERNAME  = process.env.MSSQL_USERNAME;
 const MSSQL_PASSWORD  = process.env.MSSQL_PASSWORD;

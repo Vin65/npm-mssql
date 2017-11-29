@@ -75,6 +75,11 @@ describe('MssqlConfig', () => {
         let promise = Promise.resolve(singleton.for('pinewines'));
         expect(promise).to.eventually.have.property('datasource', 'pinewines');
       });
+      
+      it('should return config for PineWines', async () => {
+        let promise = Promise.resolve(singleton.for('PineWines'));
+        expect(promise).to.eventually.have.property('datasource', 'pinewines');
+      });
     });
     
     context("when environment is specified as 'production'", () => {
