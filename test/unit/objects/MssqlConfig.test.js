@@ -1,7 +1,7 @@
 'use strict';
 
-import MssqlClient from './../../../objects/MssqlClient';
 import MssqlConfig from './../../../objects/MssqlConfig';
+import ProductionMssqlConfig from './../../../objects/ProductionMssqlConfig';
 
 import MssqlMockedResponse from './../../support/MssqlMockedResponse';
 
@@ -38,73 +38,67 @@ describe('MssqlConfig', () => {
   });
   
   describe('.singleton', () => {
-    let singleton = MssqlConfig.singleton();
-    
-    it("should return an instance of MssqlConfig", () => {
-      expect(singleton).to.be.an.instanceof(MssqlConfig);
+    context('when no environment is specified', () => {
+      let singleton;
+      
+      before(function() {
+        singleton = MssqlConfig.singleton();
+      });
+      
+      after(function() {
+        MssqlConfig.resetSingleton();
+      });
+      
+      it("should return an instance of MssqlConfig", () => {
+        expect(singleton).to.be.an.instanceof(MssqlConfig);
+      });
+      
+      it("should return same object", () => {
+        expect(singleton).to.equal(MssqlConfig.singleton());
+      });
     });
     
-    it("should return same object", () => {
-      expect(singleton).to.equal(MssqlConfig.singleton());
+    context("when environment is specified as 'production'", () => {
+      let singleton;
+      
+      before(function() {
+        singleton = MssqlConfig.singleton('production');
+      });
+      
+      after(function() {
+        MssqlConfig.resetSingleton();
+      });
+      
+      it("should return an instance of ProductionMssqlConfig", () => {
+        expect(singleton).to.be.an.instanceof(ProductionMssqlConfig);
+      });
+      
+      it("should return same object", () => {
+        expect(singleton).to.equal(ProductionMssqlConfig.singleton());
+      });
     });
   });
-  
-  describe('#addDatasource', () => {
-    let config = new MssqlConfig();
-    
-    before(function namedFun() {
-      config.addDatasource('datasource', '10.81.0.1', 'Us3r', 'P4ssw0rd!');
-    });
-    
-    it("should add datasource", () => {  
-      expect(Object.keys(config.datasources).length).to.equal(2);
-    });
-  });
-  
   
   describe('#for', () => {
     context('when no environment is specified', () => {
-      let singleton = MssqlConfig.singleton();
+      let singleton;
+      
+      before(function() {
+        singleton = MssqlConfig.singleton();
+      });
+      
+      after(function() {
+        MssqlConfig.resetSingleton();
+      });
       
       it('should return config for masterDatasource', async () => {
         let promise = Promise.resolve(singleton.for(MssqlConfig.masterDatasource()));
         expect(promise).to.eventually.have.property('datasource', MssqlConfig.masterDatasource());
       });
       
-      it('should return config for pinewines', async () => {
-        let promise = Promise.resolve(singleton.for('pinewines'));
-        expect(promise).to.eventually.have.property('datasource', 'pinewines');
-      });
-      
-      it('should return config for PineWines', async () => {
-        let promise = Promise.resolve(singleton.for('PineWines'));
-        expect(promise).to.eventually.have.property('datasource', 'pinewines');
-      });
-    });
-    
-    context("when environment is specified as 'production'", () => {
-      let config = new MssqlConfig('production');
-      let stub;
-      
-      beforeEach(function() {
-        stub = sinon.stub(MssqlClient.prototype, 'execute');
-        stub.resolves(MssqlMockedResponse.datasource('pinewines', '10.81.0.1'));
-      });
-  
-      afterEach(function() {
-        stub.restore();
-      });
-      
-      it('should return config for masterDatasource', async () => {
-        let promise = Promise.resolve(config.for(MssqlConfig.masterDatasource()));
-        expect(promise).to.eventually.have.property('datasource', MssqlConfig.masterDatasource());
-        expect(stub).to.not.have.been.called;
-      });
-      
-      it('should return config for pinewines', async () => {
-        let promise = Promise.resolve(config.for('pinewines'));
-        expect(promise).to.eventually.have.property('datasource', 'pinewines');
-        expect(stub).to.have.been.called;
+      it('should return config for any-datasource', async () => {
+        let promise = Promise.resolve(singleton.for('any-datasource'));
+        expect(promise).to.eventually.have.property('datasource', 'any-datasource');
       });
     });
   });
