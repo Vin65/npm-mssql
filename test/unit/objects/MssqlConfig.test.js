@@ -80,26 +80,24 @@ describe('MssqlConfig', () => {
   });
   
   describe('#for', () => {
-    context('when no environment is specified', () => {
-      let singleton;
-      
-      before(function() {
-        singleton = MssqlConfig.singleton();
-      });
-      
-      after(function() {
-        MssqlConfig.resetSingleton();
-      });
-      
-      it('should return config for masterDatasource', async () => {
-        let promise = Promise.resolve(singleton.for(MssqlConfig.masterDatasource()));
-        expect(promise).to.eventually.have.property('datasource', MssqlConfig.masterDatasource());
-      });
-      
-      it('should return config for any-datasource', async () => {
-        let promise = Promise.resolve(singleton.for('any-datasource'));
-        expect(promise).to.eventually.have.property('datasource', 'any-datasource');
-      });
+    let singleton;
+    
+    before(function() {
+      singleton = MssqlConfig.singleton();
+    });
+    
+    after(function() {
+      MssqlConfig.resetSingleton();
+    });
+    
+    it('should return config for masterDatasource', async () => {
+      let promise = Promise.resolve(singleton.for(MssqlConfig.masterDatasource()));
+      expect(promise).to.eventually.have.property('datasource', MssqlConfig.masterDatasource());
+    });
+    
+    it('should return config for any-datasource', async () => {
+      let promise = Promise.resolve(singleton.for('any-datasource'));
+      expect(promise).to.eventually.have.property('datasource', 'any-datasource');
     });
   });
 });

@@ -1,6 +1,7 @@
 'use strict';
 
 import MssqlClient from './../../../objects/MssqlClient';
+import MssqlQuery from './../../../lib/MssqlQuery';
 import ProductionMssqlConfig from './../../../objects/ProductionMssqlConfig';
 
 import MssqlMockedResponse from './../../support/MssqlMockedResponse';
@@ -25,32 +26,49 @@ describe('ProductionMssqlConfig', () => {
     });
   });
   
+  describe('#fetchDatasources', () => {
+    let config = new ProductionMssqlConfig();
+    let stub;
+    
+    beforeEach(function() {
+      stub = sinon.stub(MssqlClient.prototype, 'execute');
+      stub.resolves(MssqlMockedResponse.datasource('pinewines', '10.81.0.1'));
+    });
+
+    afterEach(function() {
+      stub.restore();
+    });
+    
+    it("should fetch datasources", () => {
+      let promise = Promise.resolve(config.fetchDatasources());
+      expect(promise).to.eventually.be.an.instanceOf(Array).that.has.lengthOf(1);
+      expect(stub).to.have.been.calledWith(MssqlQuery.select.datasource());
+    });
+  });
   
   describe('#for', () => {
-    context("when environment is specified as 'production'", () => {
-      let config = new ProductionMssqlConfig();
-      let stub;
-      
-      beforeEach(function() {
-        stub = sinon.stub(MssqlClient.prototype, 'execute');
-        stub.resolves(MssqlMockedResponse.datasource('pinewines', '10.81.0.1'));
-      });
-  
-      afterEach(function() {
-        stub.restore();
-      });
-      
-      it('should return config for masterDatasource', async () => {
-        let promise = Promise.resolve(config.for(ProductionMssqlConfig.masterDatasource()));
-        expect(promise).to.eventually.have.property('datasource', ProductionMssqlConfig.masterDatasource());
-        expect(stub).to.not.have.been.called;
-      });
-      
-      it('should return config for pinewines', async () => {
-        let promise = Promise.resolve(config.for('pinewines'));
-        expect(promise).to.eventually.have.property('datasource', 'pinewines');
-        expect(stub).to.have.been.called;
-      });
+    let config = new ProductionMssqlConfig();
+    let stub;
+    
+    beforeEach(function() {
+      stub = sinon.stub(MssqlClient.prototype, 'execute');
+      stub.resolves(MssqlMockedResponse.datasource('pinewines', '10.81.0.1'));
+    });
+
+    afterEach(function() {
+      stub.restore();
+    });
+    
+    it('should return config for masterDatasource', async () => {
+      let promise = Promise.resolve(config.for(ProductionMssqlConfig.masterDatasource()));
+      expect(promise).to.eventually.have.property('datasource', ProductionMssqlConfig.masterDatasource());
+      expect(stub).to.not.have.been.called;
+    });
+    
+    it('should return config for pinewines', async () => {
+      let promise = Promise.resolve(config.for('pinewines'));
+      expect(promise).to.eventually.have.property('datasource', 'pinewines');
+      expect(stub).to.have.been.called;
     });
   });
 });
