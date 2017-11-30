@@ -30,12 +30,12 @@ describe('ProductionMssqlConfig', () => {
     let config = new ProductionMssqlConfig();
     let stub;
     
-    beforeEach(function() {
+    before(function() {
       stub = sinon.stub(MssqlClient.prototype, 'execute');
       stub.resolves(MssqlMockedResponse.datasource('pinewines', '10.81.0.1'));
     });
 
-    afterEach(function() {
+    after(function() {
       stub.restore();
     });
     
@@ -50,12 +50,12 @@ describe('ProductionMssqlConfig', () => {
     let config = new ProductionMssqlConfig();
     let stub;
     
-    beforeEach(function() {
+    before(function() {
       stub = sinon.stub(MssqlClient.prototype, 'execute');
       stub.resolves(MssqlMockedResponse.datasource('pinewines', '10.81.0.1'));
     });
 
-    afterEach(function() {
+    after(function() {
       stub.restore();
     });
     

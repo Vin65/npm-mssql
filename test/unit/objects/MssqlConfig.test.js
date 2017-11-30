@@ -3,8 +3,6 @@
 import MssqlConfig from './../../../objects/MssqlConfig';
 import ProductionMssqlConfig from './../../../objects/ProductionMssqlConfig';
 
-import MssqlMockedResponse from './../../support/MssqlMockedResponse';
-
 const chai = require('chai');
 const expect = chai.expect;
 const sinon = require('sinon');
