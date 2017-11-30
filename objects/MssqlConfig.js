@@ -31,8 +31,8 @@ class MssqlConfig {
     };
   }
   
-  static singleton() {
-    if (!singleton) singleton = new MssqlConfig();
+  static singleton(environment) {
+    if (!singleton) singleton = new MssqlConfig(environment);
     return singleton;
   }
   
