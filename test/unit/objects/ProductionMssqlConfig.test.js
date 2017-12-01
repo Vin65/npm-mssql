@@ -46,7 +46,7 @@ describe('ProductionMssqlConfig', () => {
     });
   });
   
-  describe('#for', () => {
+  describe('#for_', () => {
     let config = new ProductionMssqlConfig();
     let stub;
     

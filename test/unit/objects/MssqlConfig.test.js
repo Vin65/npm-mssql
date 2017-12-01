@@ -77,7 +77,7 @@ describe('MssqlConfig', () => {
     });
   });
   
-  describe('#for', () => {
+  describe('#for_', () => {
     let singleton;
     
     before(function() {
