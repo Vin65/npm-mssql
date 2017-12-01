@@ -77,7 +77,7 @@ describe('MssqlConfig', () => {
     });
   });
   
-  describe('#for', () => {
+  describe('#for_', () => {
     let singleton;
     
     before(function() {
@@ -89,12 +89,12 @@ describe('MssqlConfig', () => {
     });
     
     it('should return config for masterDatasource', async () => {
-      let promise = Promise.resolve(singleton.for(MssqlConfig.masterDatasource()));
+      let promise = Promise.resolve(singleton.for_(MssqlConfig.masterDatasource()));
       expect(promise).to.eventually.have.property('datasource', MssqlConfig.masterDatasource());
     });
     
     it('should return config for any-datasource', async () => {
-      let promise = Promise.resolve(singleton.for('any-datasource'));
+      let promise = Promise.resolve(singleton.for_('any-datasource'));
       expect(promise).to.eventually.have.property('datasource', 'any-datasource');
     });
   });

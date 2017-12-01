@@ -43,7 +43,7 @@ class MssqlConfig {
     singleton = null;
   }
   
-  for(datasource) {
+  for_(datasource) {
     let config = this.masterDatasourceConfig;
     config.datasource = datasource.toLowerCase();
     return config;
