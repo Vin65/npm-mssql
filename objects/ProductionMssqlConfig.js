@@ -38,7 +38,7 @@ class ProductionMssqlConfig extends MssqlConfig {
     });
   }
   
-  async for(datasource) {
+  async for_(datasource) {
     let config = this.datasources[datasource.toLowerCase()];
     if (!config) {
       this.addDatasources(await this.fetchDatasources());

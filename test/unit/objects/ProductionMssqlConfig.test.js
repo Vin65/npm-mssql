@@ -60,13 +60,13 @@ describe('ProductionMssqlConfig', () => {
     });
     
     it('should return config for masterDatasource', async () => {
-      let promise = Promise.resolve(config.for(ProductionMssqlConfig.masterDatasource()));
+      let promise = Promise.resolve(config.for_(ProductionMssqlConfig.masterDatasource()));
       expect(promise).to.eventually.have.property('datasource', ProductionMssqlConfig.masterDatasource());
       expect(stub).to.not.have.been.called;
     });
     
     it('should return config for pinewines', async () => {
-      let promise = Promise.resolve(config.for('pinewines'));
+      let promise = Promise.resolve(config.for_('pinewines'));
       expect(promise).to.eventually.have.property('datasource', 'pinewines');
       expect(stub).to.have.been.called;
     });
