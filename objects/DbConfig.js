@@ -1,6 +1,6 @@
 'use strict';
 
-class DbConfig {  
+class DbConfig {
   static build(database, server, username, passsword) {
     return {
       database: database,

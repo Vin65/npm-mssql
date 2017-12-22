@@ -5,8 +5,6 @@ import DbConfig from './../../../objects/DbConfig';
 const chai = require('chai');
 const expect = chai.expect;
 
-chai.use(require('chai-as-promised'));
-
 describe('DbConfig', () => {
   describe('.build', () => {
     let subject = DbConfig.build('datasource', '10.81.0.1', 'Us3r', 'P4ssw0rd!');

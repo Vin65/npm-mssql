@@ -22,19 +22,19 @@ describe('MssqlConfig', () => {
     context('when environment is specified as null', () => {
       let singleton;
       
-      before(function() {
+      before(() => {
         singleton = MssqlConfig.singleton(null, 'datasource', '127.0.0.1', 'Us3r', 'P4ssw0rd!');
       });
       
-      after(function() {
+      after(() => {
         MssqlConfig.resetSingleton();
       });
       
-      it("should return an instance of StagingDbConfig", () => {
+      it('should return an instance of StagingDbConfig', () => {
         expect(MssqlConfig.singleton()).to.be.an.instanceof(StagingDbConfig);
       });
       
-      it("should return same object", () => {
+      it('should return same object', () => {
         expect(MssqlConfig.singleton()).to.equal(singleton);
       });
       
@@ -54,19 +54,19 @@ describe('MssqlConfig', () => {
     context("when environment is specified as 'production'", () => {
       let singleton;
       
-      before(function() {
+      before(() => {
         singleton = MssqlConfig.singleton('production', 'datasource', '127.0.0.1', 'Us3r', 'P4ssw0rd!');
       });
       
-      after(function() {
+      after(() => {
         MssqlConfig.resetSingleton();
       });
       
-      it("should return an instance of ProductionDbConfig", () => {
+      it('should return an instance of ProductionDbConfig', () => {
         expect(MssqlConfig.singleton()).to.be.an.instanceof(ProductionDbConfig);
       });
       
-      it("should return same object", () => {
+      it('should return same object', () => {
         expect(MssqlConfig.singleton()).to.equal(singleton);
       });
       

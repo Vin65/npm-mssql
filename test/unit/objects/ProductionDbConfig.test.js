@@ -47,12 +47,12 @@ describe('ProductionDbConfig', () => {
     let subject = new ProductionDbConfig(dbConfig);
     let stub;
     
-    before(function() {
+    before(() => {
       stub = sinon.stub(MssqlClient.prototype, 'execute');
       stub.resolves(MssqlMockedResponse.datasource('pinewines', '10.81.0.2'));
     });
 
-    after(function() {
+    after(() => {
       stub.restore();
     });
     
@@ -67,12 +67,12 @@ describe('ProductionDbConfig', () => {
     let subject = new ProductionDbConfig(dbConfig);
     let stub;
     
-    before(function() {
+    before(() => {
       stub = sinon.stub(MssqlClient.prototype, 'execute');
       stub.resolves(MssqlMockedResponse.datasource('pinewines', '10.81.0.2'));
     });
 
-    after(function() {
+    after(() => {
       stub.restore();
     });
     

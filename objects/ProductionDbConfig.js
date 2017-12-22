@@ -1,9 +1,7 @@
 'use strict';
 
-const MssqlQuery = require('./../lib/MssqlQuery');
 const MssqlClient = require('./MssqlClient');
-
-let singleton;
+const MssqlQuery = require('./../lib/MssqlQuery');
 
 class ProductionDbConfig {
   constructor(dbConfig) {
@@ -23,14 +21,13 @@ class ProductionDbConfig {
   
   _config(database, server) {
     let config = Object.assign({}, this.dbConfig);
-    config.database = database;
+    config.database = database.toLowerCase();
     config.server = server;
     
     return config;
   }
   
   _addConfigs(datasources) {
-    let config;
     datasources.forEach((datasource) => {
       this.configs[datasource.dataSource.toLowerCase()] = this._config(datasource.dataSource, datasource.host);
     });
@@ -57,4 +54,4 @@ class ProductionDbConfig {
   }
 }
 
-module.exports = ProductionDbConfig; 
+module.exports = ProductionDbConfig;

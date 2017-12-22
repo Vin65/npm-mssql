@@ -1,7 +1,7 @@
 'use strict';
 
-const DbConfigFactory = require('./DbConfigFactory');
 const DbConfig = require('./DbConfig');
+const DbConfigFactory = require('./DbConfigFactory');
 
 let singleton;
 

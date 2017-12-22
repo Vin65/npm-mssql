@@ -6,7 +6,6 @@ import StagingDbConfig from './../../../objects/StagingDbConfig';
 const chai = require('chai');
 const expect = chai.expect;
 
-chai.use(require('chai-as-promised'));
 chai.use(require('chai-change'));
 
 describe('StagingDbConfig', () => {
