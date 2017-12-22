@@ -58,7 +58,7 @@ describe('MssqlConfig', () => {
           expect(stub).to.not.have.been.called;
         });
         
-        it('should return config for any-datasource', async () => {
+        it("should return config for 'any-database'", async () => {
           let promise = Promise.resolve(MssqlConfig.singleton().for_('any-database'));
           expect(promise).to.eventually.have.property('database', 'any-database');
           expect(stub).to.not.have.been.called;
@@ -92,7 +92,7 @@ describe('MssqlConfig', () => {
           expect(stub).to.not.have.been.called;
         });
         
-        it('should return config for any-datasource', async () => {
+        it("should return config for 'any-database'", async () => {
           let promise = Promise.resolve(MssqlConfig.singleton().for_('any-database'));
           expect(promise).to.eventually.have.property('database', 'any-database');
           expect(stub).to.have.been.called;
