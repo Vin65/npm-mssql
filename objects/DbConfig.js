@@ -1,13 +1,24 @@
 'use strict';
 
 class DbConfig {
-  static build(database, server, username, passsword) {
+  constructor(database, server, user, password) {
+    this.database = database;
+    this.server = server;
+    this.user = user;
+    this.password = password;
+  }
+  
+  toString() {
     return {
-      database: database,
-      server:   server,
-      user:     username,
-      password: passsword
+      database: this.database,
+      server:   this.server,
+      user:     this.user,
+      password: this.password
     };
+  }
+  
+  copy() {
+    return Object.assign(Object.create(this), this);
   }
 }
 

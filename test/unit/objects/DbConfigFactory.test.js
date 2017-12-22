@@ -9,9 +9,9 @@ const chai = require('chai');
 const expect = chai.expect;
 
 describe('DbConfigFactory', () => {
+  let dbConfig = new DbConfig('datasource', '10.81.0.1', 'Us3r', 'P4ssw0rd!');
+  
   describe('.build', () => {
-    let dbConfig = DbConfig.build('datasource', '10.81.0.1', 'Us3r', 'P4ssw0rd!');
-      
     it("should return instance of ProductionDbConfig when environment is set to 'production'", () => {
       expect(DbConfigFactory.build('production', dbConfig)).to.be.an.instanceof(ProductionDbConfig);
     });

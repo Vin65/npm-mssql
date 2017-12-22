@@ -1,8 +1,10 @@
 'use strict';
 
+import MssqlClient from './../../../objects/MssqlClient';
 import MssqlConfig from './../../../objects/MssqlConfig';
 import StagingDbConfig from './../../../objects/StagingDbConfig';
 import ProductionDbConfig from './../../../objects/ProductionDbConfig';
+import MssqlMockedResponse from './../../support/MssqlMockedResponse';
 
 const chai = require('chai');
 const expect = chai.expect;
@@ -19,6 +21,17 @@ describe('MssqlConfig', () => {
   });
   
   describe('.singleton', () => {
+    let stub;
+    
+    before(() => {
+      stub = sinon.stub(MssqlClient.prototype, 'execute');
+      stub.resolves(MssqlMockedResponse.datasource('pinewines', '10.81.0.2'));
+    });
+
+    after(() => {
+      stub.restore();
+    });
+    
     context('when environment is specified as null', () => {
       let singleton;
       
@@ -42,11 +55,13 @@ describe('MssqlConfig', () => {
         it("should return config for 'datasource'", async () => {
           let promise = Promise.resolve(MssqlConfig.singleton().for_('datasource'));
           expect(promise).to.eventually.have.property('database', 'datasource');
+          expect(stub).to.not.have.been.called;
         });
         
         it('should return config for any-datasource', async () => {
           let promise = Promise.resolve(MssqlConfig.singleton().for_('any-database'));
           expect(promise).to.eventually.have.property('database', 'any-database');
+          expect(stub).to.not.have.been.called;
         });
       });
     });
@@ -74,11 +89,13 @@ describe('MssqlConfig', () => {
         it("should return config for 'datasource'", async () => {
           let promise = Promise.resolve(MssqlConfig.singleton().for_('datasource'));
           expect(promise).to.eventually.have.property('database', 'datasource');
+          expect(stub).to.not.have.been.called;
         });
         
         it('should return config for any-datasource', async () => {
           let promise = Promise.resolve(MssqlConfig.singleton().for_('any-database'));
           expect(promise).to.eventually.have.property('database', 'any-database');
+          expect(stub).to.have.been.called;
         });
       });
     });

@@ -6,7 +6,7 @@ class StagingDbConfig {
   }
   
   async for_(database) {
-    let config = Object.assign({}, this.dbConfig);
+    let config = this.dbConfig.copy();
     config.database = database.toLowerCase();
     return config;
   }

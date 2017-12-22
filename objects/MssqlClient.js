@@ -8,7 +8,7 @@ class MssqlClient {
   }
   
   execute(query, params) {
-    return mssql.connect(this.dbConfig).then(pool => {
+    return mssql.connect(this.dbConfig.toString()).then(pool => {
       pool = pool.request();
       for (var key in params) {
         pool = pool.input(key, params[key]);

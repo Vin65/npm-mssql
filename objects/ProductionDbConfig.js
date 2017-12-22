@@ -20,7 +20,7 @@ class ProductionDbConfig {
   }
   
   _config(database, server) {
-    let config = Object.assign({}, this.dbConfig);
+    let config = this.dbConfig.copy();
     config.database = database.toLowerCase();
     config.server = server;
     
@@ -34,7 +34,7 @@ class ProductionDbConfig {
   }
   
   _fetchDatasources() {
-    let mssqlClient = new MssqlClient(this.dbConfig);
+    let mssqlClient = new MssqlClient(this.dbConfig.toString());
     return mssqlClient.execute(MssqlQuery.select.datasource()).then(queryResults => {
       if (queryResults.recordsets[0].length) {
         return queryResults.recordsets[0];

@@ -12,10 +12,10 @@ class MssqlConfig {
   
   static singleton(environment, ...args) {
     if (!singleton) {
-      const dbConfig = DbConfig.build(args[0], args[1], args[2], args[3])
+      const dbConfig = new DbConfig(args[0], args[1], args[2], args[3]);
       singleton = DbConfigFactory.build(environment, dbConfig);
     }
-    
+
     return singleton;
   }
   

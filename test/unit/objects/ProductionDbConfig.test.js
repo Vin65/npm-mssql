@@ -4,7 +4,6 @@ import DbConfig from './../../../objects/DbConfig';
 import MssqlClient from './../../../objects/MssqlClient';
 import MssqlQuery from './../../../lib/MssqlQuery';
 import ProductionDbConfig from './../../../objects/ProductionDbConfig';
-
 import MssqlMockedResponse from './../../support/MssqlMockedResponse';
 
 const chai = require('chai');
@@ -16,7 +15,7 @@ chai.use(require('chai-change'));
 chai.use(require('sinon-chai'));
 
 describe('ProductionDbConfig', () => {
-  let dbConfig = DbConfig.build('datasource', '10.81.0.1', 'Us3r', 'P4ssw0rd!');
+  let dbConfig = new DbConfig('datasource', '10.81.0.1', 'Us3r', 'P4ssw0rd!');
   
   describe('#new', () => {
     let subject = new ProductionDbConfig(dbConfig);
