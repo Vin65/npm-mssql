@@ -3,28 +3,12 @@
 const mssql = require('mssql');
 
 class MssqlClient {
-  constructor(config) {
-    this.setConfig(config);
+  constructor(dbConfig) {
+    this.dbConfig = dbConfig;
   }
-  
-  setConfig(config) {
-    this.datasource = config.datasource;
-    this.server     = config.server;
-    this.username   = config.username;
-    this.password   = config.password;
-  }
-  
-  _config() {
-    return {
-      user:       this.username,
-      password:   this.password,
-      server:     this.server,
-      database:   this.datasource
-    };
-  } 
   
   execute(query, params) {
-    return mssql.connect(this._config()).then(pool => {
+    return mssql.connect(this.dbConfig.toString()).then(pool => {
       pool = pool.request();
       for (var key in params) {
         pool = pool.input(key, params[key]);

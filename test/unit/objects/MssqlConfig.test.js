@@ -1,14 +1,17 @@
 'use strict';
 
+import MssqlClient from './../../../objects/MssqlClient';
 import MssqlConfig from './../../../objects/MssqlConfig';
-import ProductionMssqlConfig from './../../../objects/ProductionMssqlConfig';
+import StagingDbConfig from './../../../objects/StagingDbConfig';
+import ProductionDbConfig from './../../../objects/ProductionDbConfig';
+import MssqlMockedResponse from './../../support/MssqlMockedResponse';
 
 const chai = require('chai');
 const expect = chai.expect;
 const sinon = require('sinon');
 
-chai.use(require("chai-as-promised"));
-chai.use(require("sinon-chai"));
+chai.use(require('chai-as-promised'));
+chai.use(require('sinon-chai'));
 
 describe('MssqlConfig', () => { 
   describe('.masterDatasource', () => {
@@ -17,85 +20,84 @@ describe('MssqlConfig', () => {
     });
   });
   
-  describe('.config', () => {
-    it("should have 'datasource' as property", () => {
-      expect(MssqlConfig.config()).to.have.property('datasource');
-    });
-    
-    it("should have 'server' as property", () => {
-      expect(MssqlConfig.config()).to.have.property('server');
-    });
-    
-    it("should have 'username' as property", () => {
-      expect(MssqlConfig.config()).to.have.property('username');
-    });
-    
-    it("should have 'password' as property", () => {
-      expect(MssqlConfig.config()).to.have.property('password');
-    });
-  });
-  
   describe('.singleton', () => {
-    context('when no environment is specified', () => {
+    let stub;
+    
+    before(() => {
+      stub = sinon.stub(MssqlClient.prototype, 'execute');
+      stub.resolves(MssqlMockedResponse.datasource('pinewines', '10.81.0.2'));
+    });
+
+    after(() => {
+      stub.restore();
+    });
+    
+    context('when environment is specified as null', () => {
       let singleton;
       
-      before(function() {
-        singleton = MssqlConfig.singleton();
+      before(() => {
+        singleton = MssqlConfig.singleton(null, 'datasource', '127.0.0.1', 'Us3r', 'P4ssw0rd!');
       });
       
-      after(function() {
+      after(() => {
         MssqlConfig.resetSingleton();
       });
       
-      it("should return an instance of MssqlConfig", () => {
-        expect(singleton).to.be.an.instanceof(MssqlConfig);
+      it('should return an instance of StagingDbConfig', () => {
+        expect(MssqlConfig.singleton()).to.be.an.instanceof(StagingDbConfig);
       });
       
-      it("should return same object", () => {
-        expect(singleton).to.equal(MssqlConfig.singleton());
+      it('should return same object', () => {
+        expect(MssqlConfig.singleton()).to.equal(singleton);
+      });
+      
+      describe('#for_', () => {
+        it("should return config for 'datasource'", async () => {
+          let promise = Promise.resolve(MssqlConfig.singleton().for_('datasource'));
+          expect(promise).to.eventually.have.property('database', 'datasource');
+          expect(stub).to.not.have.been.called;
+        });
+        
+        it("should return config for 'any-database'", async () => {
+          let promise = Promise.resolve(MssqlConfig.singleton().for_('any-database'));
+          expect(promise).to.eventually.have.property('database', 'any-database');
+          expect(stub).to.not.have.been.called;
+        });
       });
     });
     
     context("when environment is specified as 'production'", () => {
       let singleton;
       
-      before(function() {
-        singleton = MssqlConfig.singleton('production');
+      before(() => {
+        singleton = MssqlConfig.singleton('production', 'datasource', '127.0.0.1', 'Us3r', 'P4ssw0rd!');
       });
       
-      after(function() {
+      after(() => {
         MssqlConfig.resetSingleton();
       });
       
-      it("should return an instance of ProductionMssqlConfig", () => {
-        expect(singleton).to.be.an.instanceof(ProductionMssqlConfig);
+      it('should return an instance of ProductionDbConfig', () => {
+        expect(MssqlConfig.singleton()).to.be.an.instanceof(ProductionDbConfig);
       });
       
-      it("should return same object", () => {
-        expect(singleton).to.equal(ProductionMssqlConfig.singleton());
+      it('should return same object', () => {
+        expect(MssqlConfig.singleton()).to.equal(singleton);
       });
-    });
-  });
-  
-  describe('#for_', () => {
-    let singleton;
-    
-    before(function() {
-      singleton = MssqlConfig.singleton();
-    });
-    
-    after(function() {
-      MssqlConfig.resetSingleton();
-    });
-    
-    it('should return config for masterDatasource', async () => {
-      let promise = Promise.resolve(singleton.for_(MssqlConfig.masterDatasource()));
-      expect(promise).to.eventually.have.property('datasource', MssqlConfig.masterDatasource());
-    });
-    
-    it('should return config for any-datasource', async () => {
-      let promise = Promise.resolve(singleton.for_('any-datasource'));
-      expect(promise).to.eventually.have.property('datasource', 'any-datasource');
+      
+      describe('#for_', () => {
+        it("should return config for 'datasource'", async () => {
+          let promise = Promise.resolve(MssqlConfig.singleton().for_('datasource'));
+          expect(promise).to.eventually.have.property('database', 'datasource');
+          expect(stub).to.not.have.been.called;
+        });
+        
+        it("should return config for 'any-database'", async () => {
+          let promise = Promise.resolve(MssqlConfig.singleton().for_('any-database'));
+          expect(promise).to.eventually.have.property('database', 'any-database');
+          expect(stub).to.have.been.called;
+        });
+      });
     });
   });
 });
