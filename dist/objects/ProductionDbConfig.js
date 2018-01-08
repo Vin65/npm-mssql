@@ -14,9 +14,7 @@ var ProductionDbConfig = function () {
     _classCallCheck(this, ProductionDbConfig);
 
     this.dbConfig = dbConfig;
-
     this.configs = {};
-
     this._addConfigs([{
       dataSource: this.dbConfig.database,
       host: this.dbConfig.server
@@ -95,11 +93,6 @@ var ProductionDbConfig = function () {
 
       return for_;
     }()
-  }, {
-    key: 'toString',
-    value: function toString() {
-      return this.dbConfig.toString();
-    }
   }]);
 
   return ProductionDbConfig;

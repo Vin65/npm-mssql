@@ -41,11 +41,6 @@ var StagingDbConfig = function () {
 
       return for_;
     }()
-  }, {
-    key: 'toString',
-    value: function toString() {
-      return this.dbConfig.toString();
-    }
   }]);
 
   return StagingDbConfig;

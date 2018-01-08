@@ -10,10 +10,6 @@ class StagingDbConfig {
     config.database = database.toLowerCase();
     return config;
   }
-
-  toString () {
-    return this.dbConfig.toString();
-  }
 }
 
 module.exports = StagingDbConfig;

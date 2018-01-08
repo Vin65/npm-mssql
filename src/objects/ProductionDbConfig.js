@@ -50,10 +50,6 @@ class ProductionDbConfig {
 
     return this.configs[database.toLowerCase()];
   }
-
-  toString () {
-    return this.dbConfig.toString();
-  }
 }
 
 module.exports = ProductionDbConfig;
