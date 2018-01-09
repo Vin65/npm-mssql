@@ -6,7 +6,7 @@ class MssqlClient {
   constructor(dbConfig) {
     this.dbConfig = dbConfig;
   }
-  
+
   execute(query, params) {
     return mssql.connect(this.dbConfig.toString()).then(pool => {
       pool = pool.request();
