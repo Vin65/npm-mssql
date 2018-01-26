@@ -39,11 +39,11 @@ describe('DbConfig', () => {
     });
 
     it('should not traverse changes from subject to clone', () => {
-      expect(() => { subject.database = 'testing' }).to.not.alter(() => clone.database, { from: 'datasource', to: 'testing' });
+      expect(() => { subject.database = 'testing'; }).to.not.alter(() => clone.database, { from: 'datasource', to: 'testing' });
     });
 
     it('should not traverse changes from clone to subject', async () => {
-      expect(() => { clone.server = '127.0.0.1' }).to.not.alter(() => subject.server, { from: '10.81.0.1', to: '127.0.0.1' });
+      expect(() => { clone.server = '127.0.0.1'; }).to.not.alter(() => subject.server, { from: '10.81.0.1', to: '127.0.0.1' });
     });
 
   });

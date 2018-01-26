@@ -37,7 +37,7 @@ describe('ProductionDbConfig', () => {
         subject._addConfigs([{
           dataSource: 'localhost',
           host: '127.0.0.1'
-        }])
+        }]);
       }).to.alter(() => Object.keys(subject.configs).length, { by: 1 });
     });
   });

@@ -18,7 +18,7 @@ describe('StagingDbConfig', () => {
 
       beforeEach(async () => {
         subject = await config.for_('any-database');
-      })
+      });
 
       it('should have database property', () => {
         expect(subject).to.have.property('database', 'any-database');
