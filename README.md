@@ -1,5 +1,5 @@
 # Installation
-* `npm install --save git+ssh://git@github.com/Vin65/npm-mssql.git#master`
+* `npm install --save npm-mssql`
 
 * Ensure the following environment variables are added to your secrets:
   * `MSSQL_SERVER`
