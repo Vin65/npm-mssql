@@ -16,7 +16,7 @@ var MssqlClient = function () {
   _createClass(MssqlClient, [{
     key: 'execute',
     value: function execute(query, params) {
-      return mssql.connect(this.dbConfig.toString()).then(function (pool) {
+      return new mssql.ConnectionPool(this.dbConfig.toString()).connect().then(function (pool) {
         pool = pool.request();
         for (var key in params) {
           pool = pool.input(key, params[key]);
