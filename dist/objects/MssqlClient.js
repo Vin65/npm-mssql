@@ -29,6 +29,8 @@ var MssqlClient = function () {
       }).catch(function (error) {
         mssql.close();
         throw error;
+      }).finally(function () {
+        mssql.close();
       });
     }
   }]);
