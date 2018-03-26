@@ -27,22 +27,22 @@ var ProductionDbConfig = function () {
       var config = this.dbConfig.copy();
       config.database = database.toLowerCase();
       config.server = server;
-
       return config;
     }
   }, {
     key: '_addConfigs',
-    value: function _addConfigs(datasources) {
+    value: function _addConfigs(datasources, callback) {
       var _this = this;
 
       datasources.forEach(function (datasource) {
         _this.configs[datasource.dataSource.toLowerCase()] = _this._config(datasource.dataSource, datasource.host);
       });
+      if (callback) callback();
     }
   }, {
     key: '_fetchDatasources',
     value: function _fetchDatasources() {
-      var mssqlClient = new MssqlClient(this.dbConfig.toString());
+      var mssqlClient = new MssqlClient(this.dbConfig);
       return mssqlClient.execute(MssqlQuery.select.datasource()).then(function (queryResults) {
         if (queryResults.recordsets[0].length) {
           return queryResults.recordsets[0];
@@ -55,31 +55,40 @@ var ProductionDbConfig = function () {
     key: 'for_',
     value: function () {
       var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(database) {
-        var config;
+        var self, config;
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                config = this.configs[database.toLowerCase()];
+                self = this;
+                config = self.configs[database.toLowerCase()];
 
-                if (config) {
-                  _context.next = 7;
+                if (!config) {
+                  _context.next = 4;
                   break;
                 }
 
-                _context.t0 = this;
-                _context.next = 5;
-                return this._fetchDatasources();
+                return _context.abrupt('return', config);
 
-              case 5:
-                _context.t1 = _context.sent;
-
-                _context.t0.addConfigs.call(_context.t0, _context.t1);
+              case 4:
+                _context.t0 = self;
+                _context.next = 7;
+                return self._fetchDatasources();
 
               case 7:
-                return _context.abrupt('return', this.configs[database.toLowerCase()]);
+                _context.t1 = _context.sent;
 
-              case 8:
+                _context.t2 = function () {
+                  config = self.configs[database.toLowerCase()];
+                };
+
+                _context.next = 11;
+                return _context.t0._addConfigs.call(_context.t0, _context.t1, _context.t2);
+
+              case 11:
+                return _context.abrupt('return', config);
+
+              case 12:
               case 'end':
                 return _context.stop();
             }

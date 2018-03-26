@@ -9,7 +9,7 @@ class MssqlConfig {
   static masterDatasource() {
     return 'vin65master';
   }
-  
+
   static singleton(environment, ...args) {
     if (!singleton) {
       const dbConfig = new DbConfig(args[0], args[1], args[2], args[3]);
@@ -18,7 +18,7 @@ class MssqlConfig {
 
     return singleton;
   }
-  
+
   static resetSingleton() {
     singleton = null;
   }
