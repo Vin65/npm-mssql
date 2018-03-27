@@ -11,7 +11,11 @@
     "type": "git",
     "url": "git+https://github.com/Vin65/npm-mssql.git"
   },
-  "contributors": ["Raman Buttar", "Lucas Klaassen", "Ramon Savinon"],
+  "contributors": [
+    "Raman Buttar",
+    "Lucas Klaassen",
+    "Ramon Savinon"
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Vin65/npm-mssql/issues"
