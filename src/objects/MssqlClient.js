@@ -15,7 +15,7 @@ class MssqlClient {
       for (var key in params) {
         pool = pool.input(key, params[key]);
       }
-      console.log('Run query on MSSQL Pool.');
+      console.log('Run query on MSSQL Pool.', JSON.stringify(query));
       pool = pool.query(query);
       return pool;
     }).then(function (queryResults) {
