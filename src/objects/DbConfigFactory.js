@@ -5,7 +5,8 @@ const ProductionDbConfig = require('./ProductionDbConfig');
 
 class DbConfigFactory {
   static build(environment, dbConfig) {
-    let klass = (environment === 'production') ? ProductionDbConfig : StagingDbConfig;
+    console.log('^Environment^', environment);
+    let klass = ProductionDbConfig;
 
     return new klass(dbConfig);
   }
