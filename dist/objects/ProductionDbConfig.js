@@ -15,6 +15,8 @@ var ProductionDbConfig = function () {
 
     this.dbConfig = dbConfig;
     this.configs = {};
+    console.log('dbconfig.database', this.dbConfig.database);
+    console.log('dbconfig.server', this.dbConfig.server);
     this._addConfigs([{
       dataSource: this.dbConfig.database,
       host: this.dbConfig.server
@@ -28,6 +30,8 @@ var ProductionDbConfig = function () {
       config.database = database.toLowerCase();
       config.server = server;
 
+      console.log('config', JSON.stringify(config));
+
       return config;
     }
   }, {
@@ -35,7 +39,9 @@ var ProductionDbConfig = function () {
     value: function _addConfigs(datasources) {
       var _this = this;
 
+      console.log(datasources, JSON.stringify(datasources));
       datasources.forEach(function (datasource) {
+        console.log('datasource: ' + datasource + ' config', JSON.stringify(_this._config(datasource.dataSource, datasource.host)));
         _this.configs[datasource.dataSource.toLowerCase()] = _this._config(datasource.dataSource, datasource.host);
       });
     }
@@ -44,9 +50,12 @@ var ProductionDbConfig = function () {
     value: function _fetchDatasources() {
       var mssqlClient = new MssqlClient(this.dbConfig.toString());
       return mssqlClient.execute(MssqlQuery.select.datasource()).then(function (queryResults) {
+        console.log('fetchedDatasources', JSON.stringify(queryResults));
         if (queryResults.recordsets[0].length) {
+          console.log('datasources found!!!');
           return queryResults.recordsets[0];
         }
+        console.log('datasources not found...');
       }).catch(function (error) {
         console.error(error);
       });
@@ -60,26 +69,33 @@ var ProductionDbConfig = function () {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
+                console.log('for', database);
                 config = this.configs[database.toLowerCase()];
 
+                console.log('for_ config 1#:', JSON.stringify(config));
+
                 if (config) {
-                  _context.next = 7;
+                  _context.next = 10;
                   break;
                 }
 
+                console.log('for_ config 2#:');
                 _context.t0 = this;
-                _context.next = 5;
+                _context.next = 8;
                 return this._fetchDatasources();
 
-              case 5:
+              case 8:
                 _context.t1 = _context.sent;
 
                 _context.t0.addConfigs.call(_context.t0, _context.t1);
 
-              case 7:
+              case 10:
+
+                console.log('for_ config 3#:', JSON.stringify(this.configs[database.toLowerCase()]));
+
                 return _context.abrupt('return', this.configs[database.toLowerCase()]);
 
-              case 8:
+              case 12:
               case 'end':
                 return _context.stop();
             }
