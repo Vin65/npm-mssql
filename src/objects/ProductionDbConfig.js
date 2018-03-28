@@ -35,12 +35,20 @@ class ProductionDbConfig {
     });
   }
 
+  async _addConfigsPromise(datasources) {
+    console.log(datasources, JSON.stringify(datasources))
+    datasources.forEach((datasource) => {
+      console.log(`datasource: ${datasource} config`, JSON.stringify(this._config(datasource.dataSource, datasource.host)));
+      this.configs[datasource.dataSource.toLowerCase()] = this._config(datasource.dataSource, datasource.host);
+    });
+  }
+
   _fetchDatasources() {
     let mssqlClient = new MssqlClient(this.dbConfig);
     return mssqlClient.execute(MssqlQuery.select.datasource()).then(queryResults => {
       console.log('fetchedDatasources', JSON.stringify(queryResults));
       if (queryResults.recordsets[0].length) {
-        console.log('datasources found!!!');
+        console.log('datasources found!!!', queryResults.recordsets[0]);
         return queryResults.recordsets[0];
       }
       console.log('datasources not found...');
@@ -55,7 +63,7 @@ class ProductionDbConfig {
     console.log('for_ config 1#:', JSON.stringify(config))
     if (!config) {
       console.log('for_ config 2#:');
-      this.addConfigs(await this._fetchDatasources());
+      await this._addConfigsPromise(await this._fetchDatasources());
     }
 
     console.log('for_ config 3#:', JSON.stringify(this.configs[database.toLowerCase()]))
