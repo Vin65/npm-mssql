@@ -48,7 +48,7 @@ var ProductionDbConfig = function () {
   }, {
     key: '_fetchDatasources',
     value: function _fetchDatasources() {
-      var mssqlClient = new MssqlClient(this.dbConfig.toString());
+      var mssqlClient = new MssqlClient(this.dbConfig);
       return mssqlClient.execute(MssqlQuery.select.datasource()).then(function (queryResults) {
         console.log('fetchedDatasources', JSON.stringify(queryResults));
         if (queryResults.recordsets[0].length) {

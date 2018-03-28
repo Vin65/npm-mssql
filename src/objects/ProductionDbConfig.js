@@ -36,7 +36,7 @@ class ProductionDbConfig {
   }
 
   _fetchDatasources() {
-    let mssqlClient = new MssqlClient(this.dbConfig.toString());
+    let mssqlClient = new MssqlClient(this.dbConfig);
     return mssqlClient.execute(MssqlQuery.select.datasource()).then(queryResults => {
       console.log('fetchedDatasources', JSON.stringify(queryResults));
       if (queryResults.recordsets[0].length) {
