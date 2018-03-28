@@ -15,7 +15,8 @@ var DbConfigFactory = function () {
   _createClass(DbConfigFactory, null, [{
     key: 'build',
     value: function build(environment, dbConfig) {
-      var klass = ProductionDbConfig;
+      console.log('^Environment^', environment);
+      var klass = environment === 'production' ? ProductionDbConfig : StagingDbConfig;
 
       return new klass(dbConfig);
     }

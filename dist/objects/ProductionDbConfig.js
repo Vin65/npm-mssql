@@ -15,8 +15,6 @@ var ProductionDbConfig = function () {
 
     this.dbConfig = dbConfig;
     this.configs = {};
-    console.log('dbconfig.database', this.dbConfig.database);
-    console.log('dbconfig.server', this.dbConfig.server);
     this._addConfigs([{
       dataSource: this.dbConfig.database,
       host: this.dbConfig.server
@@ -30,62 +28,26 @@ var ProductionDbConfig = function () {
       config.database = database.toLowerCase();
       config.server = server;
 
-      console.log('config', JSON.stringify(config));
-
       return config;
     }
   }, {
     key: '_addConfigs',
-    value: function _addConfigs(datasources) {
+    value: function _addConfigs(datasources, callback) {
       var _this = this;
 
-      console.log(datasources, JSON.stringify(datasources));
       datasources.forEach(function (datasource) {
-        console.log('datasource: ' + datasource + ' config', JSON.stringify(_this._config(datasource.dataSource, datasource.host)));
         _this.configs[datasource.dataSource.toLowerCase()] = _this._config(datasource.dataSource, datasource.host);
       });
+      if (callback) callback();
     }
-  }, {
-    key: '_addConfigsPromise',
-    value: function () {
-      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(datasources) {
-        var _this2 = this;
-
-        return regeneratorRuntime.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                console.log(datasources, JSON.stringify(datasources));
-                datasources.forEach(function (datasource) {
-                  console.log('datasource: ' + datasource + ' config', JSON.stringify(_this2._config(datasource.dataSource, datasource.host)));
-                  _this2.configs[datasource.dataSource.toLowerCase()] = _this2._config(datasource.dataSource, datasource.host);
-                });
-
-              case 2:
-              case 'end':
-                return _context.stop();
-            }
-          }
-        }, _callee, this);
-      }));
-
-      function _addConfigsPromise(_x) {
-        return _ref.apply(this, arguments);
-      }
-
-      return _addConfigsPromise;
-    }()
   }, {
     key: '_fetchDatasources',
     value: function _fetchDatasources() {
       var mssqlClient = new MssqlClient(this.dbConfig);
       return mssqlClient.execute(MssqlQuery.select.datasource()).then(function (queryResults) {
-        console.log('fetchedDatasources', JSON.stringify(queryResults));
         if (queryResults.recordsets[0].length) {
-          console.log('datasources found!!!', queryResults.recordsets[0]);
           return queryResults.recordsets[0];
         }
-        console.log('datasources not found...');
       }).catch(function (error) {
         console.error(error);
       });
@@ -93,48 +55,47 @@ var ProductionDbConfig = function () {
   }, {
     key: 'for_',
     value: function () {
-      var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(database) {
-        var config;
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(database) {
+        var self, config;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
-            switch (_context2.prev = _context2.next) {
+            switch (_context.prev = _context.next) {
               case 0:
-                console.log('for', database);
-                config = this.configs[database.toLowerCase()];
+                self = this;
+                config = self.configs[database.toLowerCase()];
 
-                console.log('for_ config 1#:', JSON.stringify(config));
-
-                if (config) {
-                  _context2.next = 11;
+                if (!config) {
+                  _context.next = 4;
                   break;
                 }
 
-                console.log('for_ config 2#:');
-                _context2.t0 = this;
-                _context2.next = 8;
-                return this._fetchDatasources();
+                return _context.abrupt('return', config);
 
-              case 8:
-                _context2.t1 = _context2.sent;
-                _context2.next = 11;
-                return _context2.t0._addConfigsPromise.call(_context2.t0, _context2.t1);
+              case 4:
+                _context.t0 = self;
+                _context.next = 7;
+                return self._fetchDatasources();
+
+              case 7:
+                _context.t1 = _context.sent;
+
+                _context.t2 = function () {
+                  return self.configs[database.toLowerCase()];
+                };
+
+                _context.next = 11;
+                return _context.t0._addConfigs.call(_context.t0, _context.t1, _context.t2);
 
               case 11:
-
-                console.log('for_ config 3#:', JSON.stringify(this.configs[database.toLowerCase()]));
-
-                return _context2.abrupt('return', this.configs[database.toLowerCase()]);
-
-              case 13:
               case 'end':
-                return _context2.stop();
+                return _context.stop();
             }
           }
-        }, _callee2, this);
+        }, _callee, this);
       }));
 
-      function for_(_x2) {
-        return _ref2.apply(this, arguments);
+      function for_(_x) {
+        return _ref.apply(this, arguments);
       }
 
       return for_;
