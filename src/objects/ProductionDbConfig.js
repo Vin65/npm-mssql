@@ -24,16 +24,11 @@ class ProductionDbConfig {
     return config;
   }
 
-  _addConfigs(datasources) {
+  _addConfigs(datasources, callback) {
     datasources.forEach((datasource) => {
       this.configs[datasource.dataSource.toLowerCase()] = this._config(datasource.dataSource, datasource.host);
     });
-  }
-
-  async _addConfigsPromise(datasources) {
-    datasources.forEach((datasource) => {
-      this.configs[datasource.dataSource.toLowerCase()] = this._config(datasource.dataSource, datasource.host);
-    });
+    if (callback) callback();
   }
 
   _fetchDatasources() {
@@ -48,13 +43,13 @@ class ProductionDbConfig {
   }
 
   async for_(database) {
-    let config = this.configs[database.toLowerCase()];
-    if (!config) {
-      await this._addConfigsPromise(await this._fetchDatasources());
-    }
+    let self = this;
+    let config = self.configs[database.toLowerCase()];
+    if (config) return config;
 
-
-    return this.configs[database.toLowerCase()];
+    await self._addConfigs(await self._fetchDatasources(), function () {
+      return self.configs[database.toLowerCase()];
+    });
   }
 }
 
