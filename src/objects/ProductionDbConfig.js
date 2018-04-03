@@ -8,12 +8,10 @@ class ProductionDbConfig {
     this.dbConfig = dbConfig;
     this.configs = {};
     this._addConfigs(
-      [
-        {
-          dataSource: this.dbConfig.database,
-          host: this.dbConfig.server
-        }
-      ]
+      [{
+        dataSource: this.dbConfig.database,
+        host: this.dbConfig.server
+      }]
     );
   }
 
@@ -21,18 +19,18 @@ class ProductionDbConfig {
     let config = this.dbConfig.copy();
     config.database = database.toLowerCase();
     config.server = server;
-
     return config;
   }
 
-  _addConfigs(datasources) {
+  _addConfigs(datasources, callback) {
     datasources.forEach((datasource) => {
       this.configs[datasource.dataSource.toLowerCase()] = this._config(datasource.dataSource, datasource.host);
     });
+    if (callback) callback();
   }
 
   _fetchDatasources() {
-    let mssqlClient = new MssqlClient(this.dbConfig.toString());
+    let mssqlClient = new MssqlClient(this.dbConfig);
     return mssqlClient.execute(MssqlQuery.select.datasource()).then(queryResults => {
       if (queryResults.recordsets[0].length) {
         return queryResults.recordsets[0];
@@ -43,12 +41,15 @@ class ProductionDbConfig {
   }
 
   async for_(database) {
-    let config = this.configs[database.toLowerCase()];
-    if (!config) {
-      this.addConfigs(await this._fetchDatasources());
-    }
+    let self = this;
+    let config = self.configs[database.toLowerCase()];
+    if (config) return config;
 
-    return this.configs[database.toLowerCase()];
+    await self._addConfigs(await self._fetchDatasources(), function () {
+      config = self.configs[database.toLowerCase()];
+    });
+
+    return config;
   }
 }
 

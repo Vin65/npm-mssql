@@ -1,6 +1,6 @@
 {
   "name": "npm-mssql",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "MSSQL Client and Models NPM Module",
   "main": "./dist",
   "scripts": {
@@ -11,7 +11,11 @@
     "type": "git",
     "url": "git+https://github.com/Vin65/npm-mssql.git"
   },
-  "contributors": ["Raman Buttar", "Lucas Klaassen", "Ramon Savinon"],
+  "contributors": [
+    "Raman Buttar",
+    "Lucas Klaassen",
+    "Ramon Savinon"
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Vin65/npm-mssql/issues"

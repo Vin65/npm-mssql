@@ -27,8 +27,11 @@ var MssqlClient = function () {
         mssql.close();
         return queryResults;
       }).catch(function (error) {
+        console.error('npm-mssql error:', error);
         mssql.close();
         throw error;
+      }).finally(function () {
+        mssql.close();
       });
     }
   }]);
