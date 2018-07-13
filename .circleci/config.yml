@@ -1,0 +1,51 @@
+# Ruby CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2
+jobs:
+  build:
+    working_directory: ~/npm-mssql
+    
+    docker:
+      - image: circleci/node:6.10
+    
+    steps:
+      # Restore GitHub repository cache
+      - restore_cache:
+          keys:
+            - source-v1-{{ .Branch }}-{{ .Revision }}
+            - source-v1-{{ .Branch }}-
+            - source-v1-
+
+      # Checkout code from GitHub repository
+      - checkout
+
+      # Save GitHub repository cache
+      - save_cache:
+          key: source-v1-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - ".git"
+      
+      # Restore npm packages cache
+      - restore_cache:
+          keys:
+          - package-json-v1-{{ checksum "package.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - package-json-v1-
+
+      # Install npm packages
+      - run:
+          name: Install npm packages
+          command: npm install --verbose
+      
+      # Save npm packages cache
+      - save_cache:
+          key: package-json-v1-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+      
+      # Run Tests
+      - run:
+          name: Run tests
+          command: npm test
