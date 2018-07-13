@@ -14,7 +14,7 @@ describe('DbConfig', () => {
     let subject = dbConfig.toString();
 
     it('should have database property', () => {
-      expect(subject).to.have.property('database', 'datasource');
+      expect(subject).to.not.have.property('database', 'datasource');
     });
 
     it('should have server property', () => {
