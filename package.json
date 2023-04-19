@@ -40,7 +40,7 @@
     "chai-change": "^2.1.2",
     "chai-factories": "^0.1.0",
     "mocha": "^4.0.1",
-    "mocha-circleci-reporter": "0.0.2",
+    "mocha-circleci-reporter": "0.0.3",
     "sinon": "^4.1.2",
     "sinon-chai": "^2.14.0"
   }
